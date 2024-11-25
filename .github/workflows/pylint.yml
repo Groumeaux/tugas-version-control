@@ -1,28 +1,130 @@
-name: Pylint for SSL Checker
 
-on: [push]
+If you find GitHub Actions or tools like Pylint too strict, there are a few adjustments and practices you can apply to make it easier to use without compromising much on code quality. Here are some simpler configurations and common adjustments for making the GitHub Actions workflow more lenient and manageable:
+
+1. Disable Some Pylint Checks
+If Pylint is too strict, you can disable certain checks that may be irrelevant or overly opinionated for your project. For example, you can allow missing docstrings or ignore unused imports.
+
+To do this:
+
+Create or Modify .pylintrc File: Pylint allows you to configure which checks to disable. You can generate a default configuration file with:
+
+bash
+Copy code
+pylint --generate-rcfile > .pylintrc
+Modify the .pylintrc File to disable certain checks: Example: Disable warnings for missing docstrings and unused variables:
+
+ini
+Copy code
+[MESSAGES CONTROL]
+disable=C0114,C0115,C0116,W0613
+This will disable module-level docstring (C0114), function/method docstrings (C0116), and unused argument warnings (W0613).
+
+Alternatively, you can add these lines to the GitHub Actions workflow to use this .pylintrc file:
+
+yaml
+Copy code
+- name: Run Pylint with custom configuration
+  run: pylint --rcfile=.pylintrc $(git ls-files '*.py')
+2. Skip Linting for Certain Files
+If you want to avoid running Pylint on certain files (e.g., auto-generated files or temporary files), you can configure the pylint command to exclude them by specifying an exclude option in the .pylintrc file:
+
+ini
+Copy code
+[MASTER]
+# Exclude files like migrations or test output
+ignore=tests/migrations,tests/output,*.md
+Alternatively, you can modify the GitHub Actions workflow to only lint specific files:
+
+yaml
+Copy code
+- name: Run Pylint on main files only
+  run: pylint $(git ls-files '*.py' | grep -v 'tests/|migrations/')
+3. Use a Laxer Linting Tool
+If you feel Pylint is still too strict, consider switching to a more lenient linter like flake8, which tends to have fewer built-in checks. It provides a good balance between style enforcement and flexibility.
+
+To use flake8:
+
+Install Flake8 in your workflow:
+yaml
+Copy code
+- name: Install flake8
+  run: pip install flake8
+Run Flake8:
+yaml
+Copy code
+- name: Run flake8
+  run: flake8 certificate_checker.py
+Configure Flake8:
+You can create a .flake8 file to specify which checks to enable or disable. For example:
+
+ini
+Copy code
+[flake8]
+max-line-length = 100
+extend-ignore = E203, E402
+max-line-length allows you to set a maximum line length, and extend-ignore lets you specify which warnings to ignore.
+
+4. Set Workflow to Run on Pull Requests Only
+If you want to run the linting checks less frequently (e.g., only when opening a pull request), you can adjust the GitHub Actions trigger to only run on pull requests:
+
+yaml
+Copy code
+on:
+  pull_request:
+    branches:
+      - main
+This way, linting will only run when code is proposed for merging into the main branch, reducing the number of checks on every commit.
+
+5. Reduce the Frequency of Runs (Schedule Linting)
+If you want to run linting less often (e.g., daily or weekly), you can schedule it:
+
+yaml
+Copy code
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This runs the workflow every day at midnight
+This is helpful if you want to periodically enforce quality checks but don’t need them on every commit.
+
+6. Set Laxer Python Versions for Matrix Testing
+If running Pylint or other tests on multiple Python versions is too cumbersome, you can narrow down the Python versions tested. For example, run tests only on the latest stable version:
+
+yaml
+Copy code
+strategy:
+  matrix:
+    python-version: ["3.10"]
+This will limit the workflow to just one Python version rather than testing multiple versions.
+
+Simplified Example Workflow
+Here’s a relaxed version of the GitHub Actions workflow that:
+
+Runs on pull requests.
+Uses flake8 instead of pylint.
+Only checks the main Python file (certificate_checker.py).
+Ignores certain files and configures a more lenient linter.
+yaml
+Copy code
+name: Lint Code with Flake8
+
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  pylint-check:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.12"] 
-
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.10
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
+    - name: Install flake8
+      run: pip install flake8
 
-    - name: Run Pylint on certificate_checker.py
-      run: |
-        pylint certificate_checker.py
+    - name: Run flake8 on certificate_checker.py
+      run: flake8 certificate_checker.py
