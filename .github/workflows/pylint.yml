@@ -23,6 +23,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
 
-    - name: Run Pylint on test.py
+    - name: Run Pylint on certificate_checker.py
       run: |
-        pylint test.py
+        pylint certificate_checker.py
