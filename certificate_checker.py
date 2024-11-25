@@ -50,8 +50,7 @@ def cek_ssl(domain, batas_hari=50):
         return
 
     sisa_hari = (tgl_expire - datetime.now(tz=timezone.utc)).days
-    print(f'Sertifikat SSL {domain} akan expire dalam 
-          {sisa_hari} hari!')
+    print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
 
 
     if sisa_hari < batas_hari:
