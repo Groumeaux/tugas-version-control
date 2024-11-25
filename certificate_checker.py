@@ -90,4 +90,3 @@ if __name__ == "__main__":
     domain_list = ['google.com', 'seal.or.id','expired.badssl.com']
     for domain in domain_list:
         cek_ssl(domain, batas_hari=20)
-
