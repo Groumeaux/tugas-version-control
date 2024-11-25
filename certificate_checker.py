@@ -16,7 +16,7 @@ def ambil_waktu_expire_ssl(domain):
         tgl_expire = tgl_expire.replace(tzinfo=timezone.utc)
         return tgl_expire
     except (ssl.SSLError, socket.error) as e:
-        print(f"Terjadi error ketika mengambil sertifikat SSL untuk {domain}: {e}")
+        print(f"ERROR ketika mengambil sertifikat SSL untuk {domain}: {e}")
         return None
 
 
@@ -53,7 +53,8 @@ def cek_ssl(domain, batas_hari=50):
     print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
 
     if sisa_hari < batas_hari:
-        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
+        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam') 
+        + print(f'+ {sisa_hari} hari!')
         kirim_alert_email(domain, sisa_hari)
 
 
