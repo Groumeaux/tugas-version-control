@@ -52,13 +52,12 @@ def cek_ssl(domain, batas_hari=50):
     sisa_hari = (tgl_expire - datetime.now(tz=timezone.utc)).days
     print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
 
-
     if sisa_hari < batas_hari:
         print(f'ALERT: Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
         kirim_alert_email(domain, sisa_hari)
 
 
 if __name__ == "__main__":
-    domain_list = ['google.com', 'seal.or.id','expired.badssl.com']
+    domain_list = ['google.com', 'seal.or.id', 'expired.badssl.com']
     for domain in domain_list:
         cek_ssl(domain, batas_hari=30)
