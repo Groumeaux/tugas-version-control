@@ -53,7 +53,7 @@ def cek_ssl(domain, batas_hari=50):
     print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
 
     if sisa_hari < batas_hari:
-        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam') 
+        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam')
         + print(f'+ {sisa_hari} hari!')
         kirim_alert_email(domain, sisa_hari)
 
