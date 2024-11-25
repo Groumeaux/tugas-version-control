@@ -1,3 +1,9 @@
+"""
+certificate_checker.py
+-----------------------
+This script checks SSL certificate expiration for specified domains and sends alerts via email.
+"""
+
 import ssl
 import socket
 from datetime import datetime, timezone
@@ -5,6 +11,15 @@ from email.mime.text import MIMEText
 import smtplib
 
 def ambil_waktu_expire_ssl(domain):
+    """
+    Retrieves the SSL certificate expiration date for the given domain.
+
+    Args:
+        domain_name (str): The domain to check.
+
+    Returns:
+        datetime: Expiration date of the SSL certificate, or None if retrieval fails.
+    """
     context = ssl.create_default_context()
     try:
         with socket.create_connection((domain, 443), timeout=10) as sock:
@@ -19,6 +34,15 @@ def ambil_waktu_expire_ssl(domain):
         return None
 
 def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
+    """
+    Sends an alert email regarding SSL certificate status.
+
+    Args:
+        domain_name (str): The domain for which the alert is being sent.
+        sisa_hari (int, optional): Days remaining before the certificate expires.
+        no_ssl (bool, optional): Whether the domain lacks a valid SSL certificate.
+    """
+    
     sender = 'back.upl4pt0p1@gmail.com'
     receiver = 'juventinopalandeng@gmail.com'
     if no_ssl:
@@ -39,6 +63,15 @@ def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
         server.sendmail(sender, receiver, msg.as_string())
 
 def cek_ssl(domain, batas_hari=50):
+    """
+    Checks the SSL certificate expiration status for the given domain.
+
+    Args:
+        domain_name (str): The domain to check.
+        batas_hari (int): Threshold in days to trigger alerts.
+    """
+
+
     tgl_expire = ambil_waktu_expire_ssl(domain)
     if tgl_expire is None:
 
@@ -57,3 +90,5 @@ if __name__ == "__main__":
     domain_list = ['google.com', 'seal.or.id','expired.badssl.com']
     for domain in domain_list:
         cek_ssl(domain, batas_hari=20)
+
+
