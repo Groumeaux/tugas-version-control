@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from email.mime.text import MIMEText
 import smtplib
 
+
 def ambil_waktu_expire_ssl(domain):
     context = ssl.create_default_context()
     try:
@@ -15,8 +16,10 @@ def ambil_waktu_expire_ssl(domain):
         tgl_expire = tgl_expire.replace(tzinfo=timezone.utc)
         return tgl_expire
     except (ssl.SSLError, socket.error) as e:
-        print(f"Terjadi error ketika mengambil sertifikat SSL untuk {domain}: {e}")
+        print(f"Terjadi error ketika mengambil sertifikat SSL untuk 
+              {domain}: {e}")
         return None
+
 
 def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
     sender = 'back.upl4pt0p1@gmail.com'
@@ -38,6 +41,7 @@ def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
         server.login(sender, 'rrhpavlnhczttlzo')
         server.sendmail(sender, receiver, msg.as_string())
 
+
 def cek_ssl(domain, batas_hari=50):
     tgl_expire = ambil_waktu_expire_ssl(domain)
     if tgl_expire is None:
@@ -47,7 +51,9 @@ def cek_ssl(domain, batas_hari=50):
         return
 
     sisa_hari = (tgl_expire - datetime.now(tz=timezone.utc)).days
-    print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari')
+    print(f'Sertifikat SSL {domain} akan expire dalam 
+          {sisa_hari} hari!')
+
 
     if sisa_hari < batas_hari:
         print(f'ALERT: Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
@@ -57,5 +63,3 @@ if __name__ == "__main__":
     domain_list = ['google.com', 'seal.or.id','expired.badssl.com']
     for domain in domain_list:
         cek_ssl(domain, batas_hari=30)
-
-
