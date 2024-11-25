@@ -42,7 +42,7 @@ def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
         sisa_hari (int, optional): Days remaining before the certificate expires.
         no_ssl (bool, optional): Whether the domain lacks a valid SSL certificate.
     """
-    
+
     sender = 'back.upl4pt0p1@gmail.com'
     receiver = 'juventinopalandeng@gmail.com'
     if no_ssl:
@@ -90,5 +90,4 @@ if __name__ == "__main__":
     domain_list = ['google.com', 'seal.or.id','expired.badssl.com']
     for domain in domain_list:
         cek_ssl(domain, batas_hari=20)
-
 
