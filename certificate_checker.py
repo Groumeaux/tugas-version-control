@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 import smtplib
 
 
-def ambil_waktu_expire_ssl(domain):       
+def ambil_waktu_expire_ssl(domain):
     context = ssl.create_default_context()
     try:
         with socket.create_connection((domain, 443), timeout=10) as sock:
@@ -21,8 +21,8 @@ def ambil_waktu_expire_ssl(domain):
 
 
 def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
-    sender      = 'back.upl4pt0p1@gmail.com'
-    receiver    = 'juventinopalandeng@gmail.com'
+    sender= 'back.upl4pt0p1@gmail.com'
+    receiver= 'juventinopalandeng@gmail.com'
     if no_ssl:
         subject = f'Alert: Tidak Ada Sertifikat SSL untuk {domain}'
         body = f'Website {domain} tidak memiliki sertifikat SSL yang valid.'
