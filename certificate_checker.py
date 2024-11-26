@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 import smtplib
 
 
-def ambil_waktu_expire_ssl(domain):
+def ambil_waktu_expire_ssl(domain):       
     context = ssl.create_default_context()
     try:
         with socket.create_connection((domain, 443), timeout=10) as sock:
