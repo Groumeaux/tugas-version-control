@@ -21,8 +21,8 @@ def ambil_waktu_expire_ssl(domain):
 
 
 def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
-    sender = 'back.upl4pt0p1@gmail.com'
-    receiver = 'juventinopalandeng@gmail.com'
+    sender      = 'back.upl4pt0p1@gmail.com'
+    receiver    = 'juventinopalandeng@gmail.com'
     if no_ssl:
         subject = f'Alert: Tidak Ada Sertifikat SSL untuk {domain}'
         body = f'Website {domain} tidak memiliki sertifikat SSL yang valid.'
@@ -30,10 +30,10 @@ def kirim_alert_email(domain, sisa_hari=None, no_ssl=False):
         subject = f'Alert Expiration Sertifikat SSL: {domain}'
         body = f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari.'
 
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = sender
-    msg['To'] = receiver
+    msg             = MIMEText(body)
+    msg['Subject']  = subject
+    msg['From']     = sender
+    msg['To']       = receiver
 
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
         server.starttls()
@@ -53,8 +53,7 @@ def cek_ssl(domain, batas_hari=50):
     print(f'Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
 
     if sisa_hari < batas_hari:
-        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam')
-        + print(f'+ {sisa_hari} hari!')
+        print(f'ALERT: Sertifikat SSL {domain} akan expire dalam {sisa_hari} hari!')
         kirim_alert_email(domain, sisa_hari)
 
 
